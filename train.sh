@@ -1,0 +1,96 @@
+WANDB_DISABLED=0 deepspeed --num_gpus 8 \
+--master_port=9090 src/train_bash.py \
+--local_rank=0 \
+--deepspeed examples/deepspeed/ds_z2_config.json   \
+--stage sft \
+--model_name_or_path ../Qwen1.5-MoE-A2.7B-Chat/ \
+--output_dir ../Qwen1.5-MoE-A2.7B-Chat/-Func-20240418 \
+--overwrite_output_dir \
+--dataset alpaca_gpt4_zh,alpaca_gpt4_en,glaive_toolcall \
+--template default \
+--per_device_train_batch_size 1 \
+--gradient_accumulation_steps 4 \
+--lr_scheduler_type cosine \
+--logging_steps 200 \
+--save_steps 2000 \
+--optim adamw_torch \
+--learning_rate 5e-5 \
+--num_train_epochs 3 \
+--save_total_limit 1 \
+--finetuning_type lora \
+--quantization_bit 4 \
+--lora_rank 64 \
+--lora_alpha 16 \
+--lora_target all \
+--lora_dropout 0.10 \
+--bf16 \
+--cutoff_len 8192 \
+--use_fast_tokenizer True \
+--preprocessing_num_workers 16 \
+--rope_scaling linear \
+--do_train
+
+
+CUDA_VISIBLE_DEVICES=0,1,2,3,4,5,6,7 WANDB_DISABLED=1 deepspeed --num_gpus 8 \
+    ./src/train_bash.py \
+    --deepspeed examples/deepspeed/ds_z2_config.json   \
+    --stage sft \
+    --do_train \
+    --model_name_or_path ../Qwen1.5-0.5B-Chat \
+    --output_dir ../Fibona-v1-Qwen1.5-0.5B-Chat-32k \
+    --dataset long_align \
+    --template default \
+    --finetuning_type lora \
+    --lora_target q_proj,v_proj \
+    --lora_rank 1 \
+    --lora_alpha 1 \
+    --lora_dropout 0.10 \
+    --overwrite_cache \
+    --overwrite_output_dir \
+    --rope_scaling linear \
+    --cutoff_len 32768 \
+    --use_fast_tokenizer \
+    --preprocessing_num_workers 16 \
+    --per_device_train_batch_size 1 \
+    --gradient_accumulation_steps 4 \
+    --save_total_limit 4 \
+    --lr_scheduler_type cosine \
+    --logging_steps 100 \
+    --warmup_steps 2000 \
+    --save_steps 2000 \
+    --learning_rate 5e-5 \
+    --num_train_epochs 1 \
+    --ddp_timeout 180000000 \
+    --quantization_bit 4 \
+    --plot_loss \
+    --fp16
+
+WANDB_DISABLED=0 python src/train_bash.py \
+--stage sft \
+--model_name_or_path /root/model/Yi-9B-200K \
+--output_dir ../Aris-Yi-9B-Chat-Agent-32K \
+--overwrite_output_dir \
+--dataset glaive_toolcall,aris_identity,alpaca_gpt4_zh,alpaca_gpt4_en,long_qlora,long_align,long_alpaca \
+--template default \
+--per_device_train_batch_size 1 \
+--gradient_accumulation_steps 4 \
+--lr_scheduler_type cosine \
+--logging_steps 200 \
+--save_steps 2000 \
+--optim adamw_torch \
+--learning_rate 5e-5 \
+--num_train_epochs 3 \
+--save_total_limit 1 \
+--finetuning_type lora \
+--quantization_bit 4 \
+--lora_rank 64 \
+--lora_alpha 16 \
+--lora_target all \
+--lora_dropout 0.10 \
+--fp16 \
+--cutoff_len 32768 \
+--use_unsloth \
+--use_fast_tokenizer True \
+--preprocessing_num_workers 16 \
+--report_to wandb \
+--do_train
