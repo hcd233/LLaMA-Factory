@@ -1,4 +1,36 @@
 {
+  "glaive_toolcall_100k": {
+    "file_name": "glaive_toolcall_100k.json",
+    "formatting": "sharegpt",
+    "columns": {
+      "messages": "conversations",
+      "tools": "tools"
+    }
+  },
+  "long_alpaca": {
+    "file_name": "LongAlpaca_12k.json"
+  },
+  "long_qlora": {
+    "file_name": "LongQLoRA_39k.json"
+  },
+  "long_align": {
+    "file_name": "LongAlign_sharegpt_10k.json",
+    "formatting": "sharegpt",
+    "columns": {
+      "messages": "conversations",
+      "system": "system"
+    }
+  },
+  "shargpt_200k_mix": {
+    "file_name": "sharegpt_200k_mix_0121.json",
+    "formatting": "sharegpt",
+    "columns": {
+      "messages": "conversations"
+    }
+  },
+  "aris_identity": {
+    "file_name": "aris_identity.json"
+  },
   "alpaca_en": {
     "file_name": "alpaca_data_en_52k.json",
     "file_sha1": "607f94a7f581341e59685aef32f531095232cf23"
@@ -234,14 +266,6 @@
     "hf_hub_url": "WizardLM/WizardLM_evol_instruct_V2_196k",
     "ms_hub_url": "AI-ModelScope/WizardLM_evol_instruct_V2_196k",
     "formatting": "sharegpt"
-  },
-  "glaive_toolcall_100k": {
-    "hf_hub_url": "hiyouga/glaive-function-calling-v2-sharegpt",
-    "formatting": "sharegpt",
-    "columns": {
-      "messages": "conversations",
-      "tools": "tools"
-    }
   },
   "cosmopedia": {
     "hf_hub_url": "HuggingFaceTB/cosmopedia",
