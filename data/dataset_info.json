@@ -22,6 +22,12 @@
   "ruozhiba_gpt4t": {
     "file_name": "ruozhiba_gpt4t_3k.json"
   },
+  "glm_4_instruct": {
+    "file_name": "GLM-4-Instruct-4K-zh.json"
+  },
+  "glm_4_trans": {
+    "file_name": "GLM-4-question-translate-5K-zh.json"
+  },
   "long_alpaca": {
     "file_name": "LongAlpaca_12k.json"
   },
