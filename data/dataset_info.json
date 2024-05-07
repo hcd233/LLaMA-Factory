@@ -19,6 +19,9 @@
       "tools": "tools"
     }
   },
+  "ruozhiba_gpt4t": {
+    "file_name": "ruozhiba_gpt4t_3k.json"
+  },
   "long_alpaca": {
     "file_name": "LongAlpaca_12k.json"
   },
