@@ -11,6 +11,9 @@
   "alpaca_conv_en2zh": {
     "file_name": "alpaca_gpt4_conv_en2zh_50k.json"
   },
+  "aris_instruct_glm4": {
+    "file_name": "aris_instruct_glm4_zh.json"
+  },
   "glaive_toolcall_100k": {
     "file_name": "glaive_toolcall_100k.json",
     "formatting": "sharegpt",
