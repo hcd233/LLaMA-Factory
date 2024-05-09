@@ -1,0 +1,4 @@
+model_name_or_path: ../../model/Aris-Yi-6B-Chat-Agent-16K-20240508
+template: aris
+infer_backend: vllm
+vllm_enforce_eager: true
