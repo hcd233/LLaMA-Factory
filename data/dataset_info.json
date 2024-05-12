@@ -48,6 +48,9 @@
       "system": "system"
     }
   },
+  "aris_code_qa_en":{
+    "file_name": "aris_code_qa_en_32k.json"
+  },
   "shargpt_200k_mix": {
     "file_name": "sharegpt_200k_mix_0121.json",
     "formatting": "sharegpt",
