@@ -12,14 +12,6 @@ def quantize_autoawq(model_path: str, quant_path: str, dataset_path: str, text_c
         logger.error("[Check Path] model_path and quant_path should not be the same")
         exit(-1)
 
-    quant_config = {"zero_point": True, "q_group_size": 128, "w_bit": 4, "version": "GEMM"}
-    logger.info(f"[Quantize AutoAWQ] quantization config: {quant_config}")
-
-    logger.info(f"[Load Model] loading model from {model_path}")
-    model = AutoAWQForCausalLM.from_pretrained(model_path)
-    tokenizer = AutoTokenizer.from_pretrained(model_path, trust_remote_code=True)
-    logger.success(f"[Load Model] load model from {model_path} successfully")
-
     # Load Dataset
     _dataset_path = Path(dataset_path)
     if not _dataset_path.exists():
@@ -33,6 +25,14 @@ def quantize_autoawq(model_path: str, quant_path: str, dataset_path: str, text_c
         raise ValueError(f"Dataset file format not supported: {dataset_path}")
 
     dataset = [data[text_column] for data in dataset][:max_steps]
+
+    quant_config = {"zero_point": True, "q_group_size": 128, "w_bit": 4, "version": "GEMM"}
+    logger.info(f"[Quantize AutoAWQ] quantization config: {quant_config}")
+
+    logger.info(f"[Load Model] loading model from {model_path}")
+    model = AutoAWQForCausalLM.from_pretrained(model_path)
+    tokenizer = AutoTokenizer.from_pretrained(model_path, trust_remote_code=True)
+    logger.success(f"[Load Model] load model from {model_path} successfully")
 
     # Quantize
     logger.info("[Quantize Model] quantizing model...")
