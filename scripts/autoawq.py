@@ -7,7 +7,7 @@ from loguru import logger
 from transformers import AutoTokenizer
 
 
-def quantize_autoawq(model_path: str, quant_path: str, dataset_path: str, text_column: str) -> None:
+def quantize_autoawq(model_path: str, quant_path: str, dataset_path: str, text_column: str, max_steps: int = 1000) -> None:
     if model_path == quant_path:
         logger.error("[Check Path] model_path and quant_path should not be the same")
         exit(-1)
@@ -32,7 +32,7 @@ def quantize_autoawq(model_path: str, quant_path: str, dataset_path: str, text_c
     else:
         raise ValueError(f"Dataset file format not supported: {dataset_path}")
 
-    dataset = [data[text_column] for data in dataset]
+    dataset = [data[text_column] for data in dataset][:max_steps]
 
     # Quantize
     logger.info("[Quantize Model] quantizing model...")
