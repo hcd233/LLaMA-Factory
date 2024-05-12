@@ -1,4 +1,5 @@
 import json
+import random
 from pathlib import Path
 
 from awq import AutoAWQForCausalLM
@@ -7,7 +8,7 @@ from loguru import logger
 from transformers import AutoTokenizer
 
 
-def quantize_autoawq(model_path: str, quant_path: str, dataset_path: str, text_column: str, max_steps: int = 1000) -> None:
+def quantize_autoawq(model_path: str, quant_path: str, dataset_path: str, text_column: str, num_samples: int = 1000) -> None:
     if model_path == quant_path:
         logger.error("[Check Path] model_path and quant_path should not be the same")
         exit(-1)
@@ -24,7 +25,8 @@ def quantize_autoawq(model_path: str, quant_path: str, dataset_path: str, text_c
     else:
         raise ValueError(f"Dataset file format not supported: {dataset_path}")
 
-    dataset = [data[text_column] for data in dataset][:max_steps]
+    dataset = random.sample([data[text_column] for data in dataset], min(num_samples, len(dataset)))
+    logger.info(f"[Load Dataset] load {len(dataset)} samples from {dataset_path}")
 
     quant_config = {"zero_point": True, "q_group_size": 128, "w_bit": 4, "version": "GEMM"}
     logger.info(f"[Quantize AutoAWQ] quantization config: {quant_config}")
