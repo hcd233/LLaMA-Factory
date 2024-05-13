@@ -51,6 +51,9 @@
   "aris_code_qa_en":{
     "file_name": "aris_code_qa_en_32k.json"
   },
+  "aris_code_qa_zh":{
+    "file_name": "aris_code_qa_en_12k.json"
+  },
   "shargpt_200k_mix": {
     "file_name": "sharegpt_200k_mix_0121.json",
     "formatting": "sharegpt",
