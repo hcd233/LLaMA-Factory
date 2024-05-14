@@ -54,8 +54,8 @@
   "aris_code_qa_zh":{
     "file_name": "aris_code_qa_en_12k.json"
   },
-  "shargpt_200k_mix": {
-    "file_name": "sharegpt_200k_mix_0121.json",
+  "aris_sharegpt_conv_zh": {
+    "file_name": "aris_sharegpt_zh_17k.json",
     "formatting": "sharegpt",
     "columns": {
       "messages": "conversations"
