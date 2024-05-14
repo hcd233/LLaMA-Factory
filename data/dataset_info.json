@@ -52,7 +52,7 @@
     "file_name": "aris_code_qa_en_32k.json"
   },
   "aris_code_qa_zh":{
-    "file_name": "aris_code_qa_en_12k.json"
+    "file_name": "aris_code_qa_zh_12k.json"
   },
   "aris_sharegpt_conv_zh": {
     "file_name": "aris_sharegpt_zh_17k.json",
