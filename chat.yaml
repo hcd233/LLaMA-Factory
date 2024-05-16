@@ -1,3 +1,4 @@
-model_name_or_path: ../../model/Aris-Yi-6B-Chat-Agent-16K-20240508
+model_name_or_path: ../../model/Aris-Yi-1.5-6B-Chat-Agent-16K-20240514
 template: aris
+use_unsloth: true
 finetuning_type: lora
