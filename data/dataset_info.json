@@ -17,6 +17,9 @@
   "aris_alpaca_deepseek": {
     "file_name": "aris_alpaca_deepseek_34k_zh.json"
   },
+  "aris_alpaca_dpo": {
+    "hf_hub_url": "Aris-AI/aris_alpaca_dpo_zh_10k"
+  },
   "glaive_toolcall_100k": {
     "file_name": "glaive_toolcall_100k.json",
     "formatting": "sharegpt",
