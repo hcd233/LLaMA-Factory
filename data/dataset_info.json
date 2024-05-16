@@ -12,10 +12,10 @@
     "file_name": "alpaca_gpt4_conv_en2zh_50k.json"
   },
   "aris_instruct_glm4": {
-    "file_name": "aris_instruct_glm4_zh.json"
+    "hf_hub_url": "Aris-AI/aris_instruct_glm4_zh_3k"
   },
   "aris_alpaca_deepseek": {
-    "file_name": "aris_alpaca_deepseek_34k_zh.json"
+    "hf_hub_url": "Aris-AI/aris_alpaca_deepseek_34k_zh"
   },
   "aris_alpaca_dpo": {
     "hf_hub_url": "Aris-AI/aris_alpaca_dpo_zh_10k",
@@ -56,20 +56,20 @@
     }
   },
   "aris_code_qa_en":{
-    "file_name": "aris_code_qa_en_32k.json"
+    "hf_hub_url": "Aris-AI/aris_code_qa_en_32k"
   },
   "aris_code_qa_zh":{
-    "file_name": "aris_code_qa_zh_12k.json"
+    "hf_hub_url": "Aris-AI/aris_code_qa_zh_12k"
   },
   "aris_sharegpt_conv_zh": {
-    "file_name": "aris_sharegpt_zh_17k.json",
+    "hf_hub_url": "Aris-AI/aris_sharegpt_zh_17k",
     "formatting": "sharegpt",
     "columns": {
       "messages": "conversations"
     }
   },
   "aris_identity": {
-    "file_name": "aris_identity.json"
+    "hf_hub_url": "Aris-AI/aris_identity"
   },
   "alpaca_en": {
     "file_name": "alpaca_data_en_52k.json",
