@@ -1,9 +1,9 @@
 WANDB_DISABLED=0 accelerate launch src/train.py \
 	--stage sft \
-	--model_name_or_path /root/model/Yi-1.5-6B-Chat \
-	--output_dir /root/adapter/Aris-Yi-1.5-6B-Chat-Agent-16K-20240514 \
+	--model_name_or_path /root/model/Yi-1.5-9B-Chat \
+	--output_dir /root/adapter/Aris-Yi-1.5-9B-Chat-Agent-16K-20240517 \
 	--overwrite_output_dir \
-	--dataset aris_identity,aris_instruct_glm4,aris_alpaca_deepseek,glaive_toolcall,ruozhiba_gpt4t,aris_code_qa_en,aris_code_qa_zh,aris_sharegpt_conv_zh \
+	--dataset aris_identity,aris_instruct_glm4,aris_alpaca_deepseek,glaive_toolcall,aris_toolcall,ruozhiba_gpt4t,aris_code_qa_en,aris_code_qa_zh,aris_sharegpt_zh \
 	--template aris \
 	--per_device_train_batch_size 1 \
 	--gradient_accumulation_steps 8 \

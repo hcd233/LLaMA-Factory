@@ -61,11 +61,19 @@
   "aris_code_qa_zh":{
     "hf_hub_url": "Aris-AI/aris_code_qa_zh_12k"
   },
-  "aris_sharegpt_conv_zh": {
-    "hf_hub_url": "Aris-AI/aris_sharegpt_zh_17k",
+  "aris_sharegpt_zh": {
+    "hf_hub_url": "Aris-AI/aris_sharegpt_zh_18k",
     "formatting": "sharegpt",
     "columns": {
       "messages": "conversations"
+    }
+  },
+  "aris_toolcall": {
+    "hf_hub_url": "Aris-AI/aris_toolcall_zh_6k",
+    "formatting": "sharegpt",
+    "columns": {
+      "messages": "conversations",
+      "tools": "tools"
     }
   },
   "aris_identity": {
