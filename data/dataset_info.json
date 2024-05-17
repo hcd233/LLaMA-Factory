@@ -15,7 +15,7 @@
     "hf_hub_url": "Aris-AI/aris_instruct_glm4_zh_3k"
   },
   "aris_alpaca_deepseek": {
-    "hf_hub_url": "Aris-AI/aris_alpaca_deepseek_34k_zh"
+    "hf_hub_url": "Aris-AI/aris-alpaca-deepseek-34k-zh"
   },
   "aris_alpaca_dpo": {
     "hf_hub_url": "Aris-AI/aris_alpaca_dpo_zh_10k",
