@@ -12,17 +12,41 @@
     "file_name": "alpaca_gpt4_conv_en2zh_50k.json"
   },
   "aris_instruct_glm4": {
-    "hf_hub_url": "Aris-AI/aris_instruct_glm4_zh_3k"
+    "hf_hub_url": "Aris-AI/Aris-instruct-glm4-zh-3k"
   },
   "aris_alpaca_deepseek": {
-    "hf_hub_url": "Aris-AI/aris-alpaca-deepseek-34k-zh"
+    "hf_hub_url": "Aris-AI/Aris-alpaca-deepseek-zh-34k"
   },
   "aris_alpaca_dpo": {
-    "hf_hub_url": "Aris-AI/aris_alpaca_dpo_zh_10k",
+    "hf_hub_url": "Aris-AI/Aris-alpaca-dpo-zh-10k",
     "ranking": true
   },
   "aris_trans": {
     "file_name":  "aris_inst_zh_trans_27k.json"
+  },
+  "aris_code_qa_en":{
+    "hf_hub_url": "Aris-AI/Aris-code-qa-en-32k"
+  },
+  "aris_code_qa_zh":{
+    "hf_hub_url": "Aris-AI/Aris-code-qa-zh-12k"
+  },
+  "aris_sharegpt_zh": {
+    "hf_hub_url": "Aris-AI/Aris-sharegpt-zh-18k",
+    "formatting": "sharegpt",
+    "columns": {
+      "messages": "conversations"
+    }
+  },
+  "aris_toolcall": {
+    "hf_hub_url": "Aris-AI/Aris-toolcall-zh-6k",
+    "formatting": "sharegpt",
+    "columns": {
+      "messages": "conversations",
+      "tools": "tools"
+    }
+  },
+  "aris_identity": {
+    "hf_hub_url": "Aris-AI/Aris-identity-90"
   },
   "glaive_toolcall_100k": {
     "file_name": "glaive_toolcall_100k.json",
@@ -54,30 +78,6 @@
       "messages": "conversations",
       "system": "system"
     }
-  },
-  "aris_code_qa_en":{
-    "hf_hub_url": "Aris-AI/aris_code_qa_en_32k"
-  },
-  "aris_code_qa_zh":{
-    "hf_hub_url": "Aris-AI/aris_code_qa_zh_12k"
-  },
-  "aris_sharegpt_zh": {
-    "hf_hub_url": "Aris-AI/aris_sharegpt_zh_18k",
-    "formatting": "sharegpt",
-    "columns": {
-      "messages": "conversations"
-    }
-  },
-  "aris_toolcall": {
-    "hf_hub_url": "Aris-AI/aris_toolcall_zh_6k",
-    "formatting": "sharegpt",
-    "columns": {
-      "messages": "conversations",
-      "tools": "tools"
-    }
-  },
-  "aris_identity": {
-    "hf_hub_url": "Aris-AI/aris_identity"
   },
   "alpaca_en": {
     "file_name": "alpaca_data_en_52k.json"
