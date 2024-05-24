@@ -1,16 +1,4 @@
 {
-  "alpaca_sent_zh2en": {
-    "file_name": "alpaca_gpt4_sent_zh2en_100k.json"
-  },
-  "alpaca_sent_en2zh": {
-    "file_name": "alpaca_gpt4_sent_en2zh_100k.json"
-  },
-  "alpaca_conv_zh2en": {
-    "file_name": "alpaca_gpt4_conv_zh2en_50k.json"
-  },
-  "alpaca_conv_en2zh": {
-    "file_name": "alpaca_gpt4_conv_en2zh_50k.json"
-  },
   "aris_instruct_glm4": {
     "hf_hub_url": "Aris-AI/Aris-instruct-glm4-zh-3k"
   },
