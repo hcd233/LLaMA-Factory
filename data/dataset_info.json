@@ -14,8 +14,11 @@
   "aris_instruct_glm4": {
     "hf_hub_url": "Aris-AI/Aris-instruct-glm4-zh-3k"
   },
-  "aris_leetcode": {
-    "hf_hub_url": "Aris-AI/aris-leetcode-instruct-zh-11k"
+  "aris_trans_inst_en2zh_15k": {
+    "hf_hub_url": "Aris-AI/aris-trans-inst-en2zh-15k"
+  },
+  "aris_trans_inst_zh2en_15k": {
+    "hf_hub_url": "Aris-AI/aris-trans-inst-zh2en-15k"
   },
   "aris_alpaca_deepseek": {
     "hf_hub_url": "Aris-AI/Aris-alpaca-deepseek-zh-34k"
