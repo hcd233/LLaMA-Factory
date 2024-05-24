@@ -8,6 +8,18 @@
   "aris_trans_inst_zh2en_15k": {
     "hf_hub_url": "Aris-AI/aris-trans-inst-zh2en-15k"
   },
+  "aris_trans_tpl_inst_zh2en": {
+    "hf_hub_url": "Aris-AI/aris-trans-tpl-inst-zh2en-60k"
+  },
+  "aris_trans_tpl_inst_en2zh": {
+    "hf_hub_url": "Aris-AI/aris-trans-tpl-inst-en2zh-60k"
+  },
+  "aris_trans_tpl_conv_zh2en": {
+    "hf_hub_url": "Aris-AI/aris-trans-tpl-conv-zh2en-40k"
+  },
+  "aris_trans_tpl_conv_en2zh": {
+    "hf_hub_url": "Aris-AI/aris-trans-tpl-conv-en2zh-40k"
+  },
   "aris_alpaca_deepseek": {
     "hf_hub_url": "Aris-AI/Aris-alpaca-deepseek-zh-34k"
   },
