@@ -15,9 +15,6 @@
     "hf_hub_url": "Aris-AI/Aris-alpaca-dpo-zh-10k",
     "ranking": true
   },
-  "aris_trans": {
-    "file_name":  "aris_inst_zh_trans_27k.json"
-  },
   "aris_code_qa_en":{
     "hf_hub_url": "Aris-AI/Aris-code-qa-en-32k"
   },
