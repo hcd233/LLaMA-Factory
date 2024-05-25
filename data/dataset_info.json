@@ -62,6 +62,14 @@
   "ruozhiba_gpt4t": {
     "file_name": "ruozhiba_gpt4t_3k.json"
   },
+  "glaive_toolcall": {
+    "hf_hub_url": "glaiveai/glaive-function-calling-v2",
+    "formatting": "sharegpt",
+    "columns": {
+      "messages": "conversations",
+      "tools": "tools"
+    }
+  },
   "glm_4_instruct": {
     "file_name": "GLM-4-Instruct-4K-zh.json"
   },
