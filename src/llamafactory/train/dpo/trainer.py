@@ -4,7 +4,7 @@ from types import MethodType
 from typing import TYPE_CHECKING, Dict, Literal, Optional, Tuple, Union
 
 import torch
-from transformers import BatchEncoding, Trainer
+from transformers import Trainer
 from trl import DPOTrainer
 from trl.trainer.utils import disable_dropout_in_model
 
@@ -47,11 +47,13 @@ class CustomDPOTrainer(DPOTrainer):
         self._peft_has_been_casted_to_bf16 = False
 
         self.ref_model = ref_model
+        self._stored_metrics = defaultdict(lambda: defaultdict(list))
+
+        # dpo hyperparams
         self.beta = finetuning_args.dpo_beta
         self.label_smoothing = finetuning_args.dpo_label_smoothing
         self.loss_type = finetuning_args.dpo_loss
         self.ftx_gamma = finetuning_args.dpo_ftx
-        self._stored_metrics = defaultdict(lambda: defaultdict(list))
 
         Trainer.__init__(self, model=model, **kwargs)
         if not hasattr(self, "accelerator"):
@@ -106,14 +108,8 @@ class CustomDPOTrainer(DPOTrainer):
 
         Otherwise the average log probabilities.
         """
-        batch_copied = BatchEncoding({k: v.detach().clone() for k, v in batch.items()})  # avoid error
-
-        all_logits: "torch.Tensor" = model(
-            input_ids=batch_copied["input_ids"],
-            attention_mask=batch_copied["attention_mask"],
-            return_dict=True,
-            use_cache=False,
-        ).logits.to(torch.float32)
+        batch_copied = {k: v.detach().clone() for k, v in batch.items()}  # avoid error
+        all_logits: "torch.Tensor" = model(**batch_copied, return_dict=True, use_cache=False).logits.to(torch.float32)
 
         all_logps = self.get_batch_logps(
             logits=all_logits,
@@ -143,6 +139,7 @@ class CustomDPOTrainer(DPOTrainer):
             policy_chosen_logits,
             policy_rejected_logits,
         ) = self.concatenated_forward(model, batch)
+
         with torch.no_grad():
             if self.ref_model is None:
                 ref_model = self.model

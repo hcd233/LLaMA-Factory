@@ -1,7 +1,8 @@
 import uuid
-from typing import TYPE_CHECKING, AsyncGenerator, AsyncIterator, Dict, List, Optional, Sequence
+from typing import TYPE_CHECKING, AsyncGenerator, AsyncIterator, Dict, List, Optional, Sequence, Union
 
 from ..data import get_template_and_fix_tokenizer
+from ..extras.constants import IMAGE_TOKEN
 from ..extras.logging import get_logger
 from ..extras.misc import get_device_count, infer_optim_dtype
 from ..extras.packages import is_vllm_available
@@ -17,7 +18,6 @@ if is_vllm_available():
 
 
 if TYPE_CHECKING:
-    import torch
     from numpy.typing import NDArray
     from transformers.image_processing_utils import BaseImageProcessor
 
@@ -67,7 +67,7 @@ class VllmEngine(BaseEngine):
             patch_size = config.vision_config.patch_size
             self.image_feature_size = (image_size // patch_size) ** 2
             engine_args["image_input_type"] = "pixel_values"
-            engine_args["image_token_id"] = self.tokenizer.convert_tokens_to_ids("<image>")
+            engine_args["image_token_id"] = self.tokenizer.convert_tokens_to_ids(IMAGE_TOKEN)
             engine_args["image_input_shape"] = "1,3,{},{}".format(image_size, image_size)
             engine_args["image_feature_size"] = self.image_feature_size
             if getattr(config, "is_yi_vl_derived_model", None):
@@ -92,27 +92,49 @@ class VllmEngine(BaseEngine):
         **input_kwargs,
     ) -> AsyncIterator["RequestOutput"]:
         request_id = "chatcmpl-{}".format(uuid.uuid4().hex)
-        if self.processor is not None and image is not None and "<image>" not in messages[0]["content"]:
-            messages[0]["content"] = "<image>" * self.image_feature_size + messages[0]["content"]
+
+        if (
+            self.processor is not None
+            and image is not None
+            and not hasattr(self.processor, "image_seq_length")
+            and IMAGE_TOKEN not in messages[0]["content"]
+        ):  # llava-like models
+            messages[0]["content"] = IMAGE_TOKEN * self.image_feature_size + messages[0]["content"]
 
         paired_messages = messages + [{"role": "assistant", "content": ""}]
+        system = system or self.generating_args["default_system"]
         prompt_ids, _ = self.template.encode_oneturn(
             tokenizer=self.tokenizer, messages=paired_messages, system=system, tools=tools
         )
+
+        if self.processor is not None and image is not None:  # add image features
+            image_processor: "BaseImageProcessor" = getattr(self.processor, "image_processor")
+            pixel_values = image_processor(image, return_tensors="pt")["pixel_values"]
+            multi_modal_data = MultiModalData(type=MultiModalData.Type.IMAGE, data=pixel_values)
+        else:
+            multi_modal_data = None
+
         prompt_length = len(prompt_ids)
 
-        use_beam_search = self.generating_args["num_beams"] > 1
-        temperature = input_kwargs.pop("temperature", self.generating_args["temperature"])
-        top_p = input_kwargs.pop("top_p", self.generating_args["top_p"])
-        top_k = input_kwargs.pop("top_k", self.generating_args["top_k"])
-        num_return_sequences = input_kwargs.pop("num_return_sequences", 1)
-        repetition_penalty = input_kwargs.pop("repetition_penalty", self.generating_args["repetition_penalty"])
-        length_penalty = input_kwargs.pop("length_penalty", self.generating_args["length_penalty"])
-        max_length = input_kwargs.pop("max_length", None)
-        max_new_tokens = input_kwargs.pop("max_new_tokens", None)
-        stop = input_kwargs.pop("stop", None)
+        use_beam_search: bool = self.generating_args["num_beams"] > 1
+        temperature: Optional[float] = input_kwargs.pop("temperature", None)
+        top_p: Optional[float] = input_kwargs.pop("top_p", None)
+        top_k: Optional[float] = input_kwargs.pop("top_k", None)
+        num_return_sequences: int = input_kwargs.pop("num_return_sequences", 1)
+        repetition_penalty: Optional[float] = input_kwargs.pop("repetition_penalty", None)
+        length_penalty: Optional[float] = input_kwargs.pop("length_penalty", None)
+        max_length: Optional[int] = input_kwargs.pop("max_length", None)
+        max_new_tokens: Optional[int] = input_kwargs.pop("max_new_tokens", None)
+        stop: Optional[Union[str, List[str]]] = input_kwargs.pop("stop", None)
 
-        max_tokens = self.generating_args["max_new_tokens"] or self.generating_args["max_length"]
+        if "max_new_tokens" in self.generating_args:
+            max_tokens = self.generating_args["max_new_tokens"]
+        elif "max_length" in self.generating_args:
+            if self.generating_args["max_length"] > prompt_length:
+                max_tokens = self.generating_args["max_length"] - prompt_length
+            else:
+                max_tokens = 1
+
         if max_length:
             max_tokens = max_length - prompt_length if max_length > prompt_length else 1
 
@@ -121,24 +143,20 @@ class VllmEngine(BaseEngine):
 
         sampling_params = SamplingParams(
             n=num_return_sequences,
-            repetition_penalty=repetition_penalty,
-            temperature=temperature,
-            top_p=top_p,
-            top_k=top_k,
+            repetition_penalty=(
+                repetition_penalty if repetition_penalty is not None else self.generating_args["repetition_penalty"]
+            )
+            or 1.0,  # repetition_penalty must > 0
+            temperature=temperature if temperature is not None else self.generating_args["temperature"],
+            top_p=(top_p if top_p is not None else self.generating_args["top_p"]) or 1.0,  # top_p must > 0
+            top_k=top_k if top_k is not None else self.generating_args["top_k"],
             use_beam_search=use_beam_search,
-            length_penalty=length_penalty,
+            length_penalty=length_penalty if length_penalty is not None else self.generating_args["length_penalty"],
             stop=stop,
             stop_token_ids=[self.tokenizer.eos_token_id] + self.tokenizer.additional_special_tokens_ids,
             max_tokens=max_tokens,
             skip_special_tokens=True,
         )
-
-        if self.processor is not None and image is not None:
-            image_processor: "BaseImageProcessor" = getattr(self.processor, "image_processor")
-            pixel_values: "torch.Tensor" = image_processor(image, return_tensors="pt")["pixel_values"]
-            multi_modal_data = MultiModalData(type=MultiModalData.Type.IMAGE, data=pixel_values)
-        else:
-            multi_modal_data = None
 
         result_generator = self.model.generate(
             prompt=None,

@@ -65,7 +65,7 @@ def check_dependencies() -> None:
         require_version("datasets>=2.14.3", "To fix: pip install datasets>=2.14.3")
         require_version("accelerate>=0.27.2", "To fix: pip install accelerate>=0.27.2")
         require_version("peft>=0.10.0", "To fix: pip install peft>=0.10.0")
-        require_version("trl>=0.8.1", "To fix: pip install trl>=0.8.1")
+        require_version("trl>=0.8.2", "To fix: pip install trl>=0.8.2")
 
 
 def count_parameters(model: torch.nn.Module) -> Tuple[int, int]:
@@ -225,4 +225,4 @@ def try_download_model_from_ms(model_args: "ModelArguments") -> str:
 
 
 def use_modelscope() -> bool:
-    return bool(int(os.environ.get("USE_MODELSCOPE_HUB", "0")))
+    return os.environ.get("USE_MODELSCOPE_HUB", "0").lower() in ["true", "1"]

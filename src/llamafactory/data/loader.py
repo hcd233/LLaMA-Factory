@@ -1,5 +1,6 @@
 import inspect
 import os
+import sys
 from typing import TYPE_CHECKING, Literal, Optional, Union
 
 from datasets import load_dataset, load_from_disk
@@ -57,7 +58,7 @@ def load_single_dataset(
             data_files.append(local_path)
             data_path = FILEEXT2TYPE.get(local_path.split(".")[-1], None)
         else:
-            raise ValueError("File not found.")
+            raise ValueError("File {} not found.".format(local_path))
 
         if data_path is None:
             raise ValueError("File extension must be txt, csv, json or jsonl.")
@@ -116,7 +117,7 @@ def get_dataset(
     model_args: "ModelArguments",
     data_args: "DataArguments",
     training_args: "Seq2SeqTrainingArguments",
-    stage: Literal["pt", "sft", "rm", "ppo"],
+    stage: Literal["pt", "sft", "rm", "kto"],
     tokenizer: "PreTrainedTokenizer",
     processor: Optional["ProcessorMixin"] = None,
 ) -> Union["Dataset", "IterableDataset"]:
@@ -167,12 +168,15 @@ def get_dataset(
                 logger.info("Tokenized dataset saved at {}.".format(data_args.tokenized_path))
                 logger.info("Please restart the training with `--tokenized_path {}`.".format(data_args.tokenized_path))
 
-            exit(0)
+            sys.exit(0)
 
         if training_args.should_log:
             try:
                 print_function(next(iter(dataset)))
             except StopIteration:
-                raise RuntimeError("Cannot find valid samples, check `data/README.md` for the data format.")
+                if stage == "pt":
+                    raise RuntimeError("Cannot find sufficient samples, consider increasing dataset size.")
+                else:
+                    raise RuntimeError("Cannot find valid samples, check `data/README.md` for the data format.")
 
         return dataset
