@@ -63,7 +63,7 @@
     "file_name": "ruozhiba_gpt4t_3k.json"
   },
   "glaive_toolcall": {
-    "hf_hub_url": "glaiveai/glaive-function-calling-v2",
+    "hf_hub_url": "hiyouga/glaive-function-calling-v2-sharegpt",
     "formatting": "sharegpt",
     "columns": {
       "messages": "conversations",
