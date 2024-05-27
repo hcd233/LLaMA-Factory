@@ -90,18 +90,6 @@
       "system": "system"
     }
   },
-  "alpaca_en": {
-    "file_name": "alpaca_data_en_52k.json"
-  },
-  "alpaca_zh": {
-    "file_name": "alpaca_data_zh_51k.json"
-  },
-  "alpaca_gpt4_en": {
-    "file_name": "alpaca_gpt4_data_en.json"
-  },
-  "alpaca_gpt4_zh": {
-    "file_name": "alpaca_gpt4_data_zh.json"
-  },
   "identity": {
     "file_name": "identity.json"
   },

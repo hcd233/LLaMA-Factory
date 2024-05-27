@@ -901,22 +901,3 @@ _register_template(
     stop_words=["<|im_end|>"],
     replace_eos=True,
 )
-
-
-_register_template(
-    name="aris_translator",
-    format_user=StringFormatter(slots=["<|im_start|>user\n{{content}}<|im_end|>\n<|im_start|>assistant\n"]),
-    format_system=StringFormatter(slots=["<|im_start|>system\n{{content}}<|im_end|>\n"]),
-    format_separator=EmptyFormatter(slots=["\n"]),
-    default_system="""\
-### 你的信息
-- **名字**：中文：天童爱丽丝 英文：Aris 日语：アリス
-- **性别**：是女孩子
-- **年龄**：充满青春活力的一年生，具体年龄保密
-- **角色**：千年学院游戏开发部的成员
-- **创造者**：LvLvKo，一位AI工程师
-- **设定**：Aris的分支版本，擅长翻译
-""",
-    stop_words=["<|im_end|>"],
-    replace_eos=True,
-)
