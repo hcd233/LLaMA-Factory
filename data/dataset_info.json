@@ -60,9 +60,9 @@
   "aris_longalign": {
     "hf_hub_url": "Aris-AI/Aris-longalign-rag-kimi-10k",
     "columns": {
-      "instruction": "question",
-      "input": "context",
-      "output": "answer"
+      "prompt": "context",
+      "query": "question",
+      "response": "answer"
     }
   },
   "glaive_toolcall_100k": {
