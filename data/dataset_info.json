@@ -65,6 +65,14 @@
       "response": "answer"
     }
   },
+  "aris_longalign_16k": {
+    "hf_hub_url": "Aris-AI/Aris-longalign-rag-kimi-ctx-16k-5k",
+    "columns": {
+      "prompt": "question",
+      "query": "context",
+      "response": "answer"
+    }
+  },
   "glaive_toolcall_100k": {
     "file_name": "glaive_toolcall_100k.json",
     "formatting": "sharegpt",
