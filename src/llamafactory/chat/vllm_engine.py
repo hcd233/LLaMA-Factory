@@ -59,7 +59,7 @@ class VllmEngine(BaseEngine):
         self.tokenizer = tokenizer_module["tokenizer"]
         self.processor = tokenizer_module["processor"]
         self.tokenizer.padding_side = "left"
-        self.template = get_template_and_fix_tokenizer(self.tokenizer, data_args.template)
+        self.template = get_template_and_fix_tokenizer(self.tokenizer, data_args.template, data_args.tool_format)
         self.generating_args = generating_args.to_dict()
 
         engine_args = {
@@ -182,9 +182,6 @@ class VllmEngine(BaseEngine):
             lora_request=self.lora_request,
         )
         return result_generator
-
-    async def start(self) -> None:
-        pass
 
     async def chat(
         self,

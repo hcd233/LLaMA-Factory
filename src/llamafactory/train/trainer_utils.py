@@ -17,12 +17,11 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import os
 from typing import TYPE_CHECKING, Callable, Dict, List, Optional, Tuple, Union
 
 import torch
-from peft import PeftModel
 from transformers import Trainer
+from transformers.integrations import is_deepspeed_zero3_enabled
 from transformers.optimization import get_scheduler
 from transformers.pytorch_utils import ALL_LAYERNORM_LAYERS
 from transformers.trainer_pt_utils import get_parameter_names
@@ -39,7 +38,6 @@ if is_galore_available():
 
 
 if TYPE_CHECKING:
-    from accelerate import Accelerator
     from transformers import PreTrainedModel, Seq2SeqTrainingArguments
     from trl import AutoModelForCausalLMWithValueHead
 
@@ -174,50 +172,6 @@ def create_reward_model(
         return reward_model
 
 
-def convert_pissa_adapter(
-    output_dir: str,
-    state_dict: Dict[str, "torch.Tensor"],
-    accelerator: "Accelerator",
-    model: "PreTrainedModel",
-    training_args: "Seq2SeqTrainingArguments",
-) -> None:
-    r"""
-    Converts the PiSSA adapter to a LoRA adapter.
-    """
-    pissa_init_dir = os.path.join(training_args.output_dir, "pissa_init")
-    pissa_backup_dir = os.path.join(output_dir, "pissa_backup")
-    if output_dir == pissa_init_dir:
-        logger.info("Initial PiSSA adatper will be saved at: {}.".format(pissa_init_dir))
-        unwrapped_model = accelerator.unwrap_model(model)
-        if isinstance(unwrapped_model, PeftModel):
-            init_lora_weights = getattr(unwrapped_model.peft_config["default"], "init_lora_weights")
-            setattr(unwrapped_model.peft_config["default"], "init_lora_weights", True)
-            unwrapped_model.save_pretrained(
-                output_dir,
-                state_dict=state_dict,
-                safe_serialization=training_args.save_safetensors,
-            )
-            setattr(unwrapped_model.peft_config["default"], "init_lora_weights", init_lora_weights)
-    elif output_dir == training_args.output_dir:  # at the end of training
-        logger.info("Converted PiSSA adapter will be saved at: {}.".format(output_dir))
-        unwrapped_model = accelerator.unwrap_model(model)
-        if isinstance(unwrapped_model, PeftModel):  # backup the pissa adapter for further use
-            unwrapped_model.save_pretrained(
-                pissa_backup_dir,
-                state_dict=state_dict,
-                safe_serialization=training_args.save_safetensors,
-            )
-            unwrapped_model.save_pretrained(
-                output_dir,
-                state_dict=state_dict,
-                safe_serialization=training_args.save_safetensors,
-                convert_pissa_to_lora=pissa_init_dir,
-            )
-            # TODO: the model is applied pissa again unexpectedly
-            unwrapped_model.load_adapter(pissa_backup_dir, "default", is_trainable=True)
-            unwrapped_model.set_adapter("default")
-
-
 def _get_decay_parameter_names(model: "PreTrainedModel") -> List[str]:
     r"""
     Returns a list of names of parameters with weight decay. (weights in non-layernorm layers)
@@ -233,7 +187,7 @@ def _create_galore_optimizer(
     finetuning_args: "FinetuningArguments",
 ) -> "torch.optim.Optimizer":
     if len(finetuning_args.galore_target) == 1 and finetuning_args.galore_target[0] == "all":
-        galore_targets = find_all_linear_modules(model)
+        galore_targets = find_all_linear_modules(model, finetuning_args.freeze_vision_tower)
     else:
         galore_targets = finetuning_args.galore_target
 
@@ -383,6 +337,7 @@ def _create_badam_optimizer(
             start_block=finetuning_args.badam_start_block,
             switch_mode=finetuning_args.badam_switch_mode,
             verbose=finetuning_args.badam_verbose,
+            ds_zero3_enabled=is_deepspeed_zero3_enabled(),
         )
         logger.info(
             f"Using BAdam optimizer with layer-wise update, switch mode is {finetuning_args.badam_switch_mode}, "
@@ -404,7 +359,7 @@ def _create_badam_optimizer(
             **optim_kwargs,
         )
         logger.info(
-            f"Using BAdam optimizer with ratio-wise update, update ratio is {finetuning_args.badam_update_ratio}, "
+            f"Using BAdam optimizer with ratio-based update, update ratio is {finetuning_args.badam_update_ratio}, "
             f"mask mode is {finetuning_args.badam_mask_mode}"
         )
 

@@ -113,7 +113,7 @@ class LoraArguments:
         metadata={"help": "Whether or not to initialize a PiSSA adapter."},
     )
     pissa_iter: int = field(
-        default=4,
+        default=16,
         metadata={"help": "The number of iteration steps performed by FSVD in PiSSA. Use -1 to disable it."},
     )
     pissa_convert: bool = field(
@@ -352,7 +352,7 @@ class FinetuningArguments(FreezeArguments, LoraArguments, RLHFArguments, GaloreA
         self.additional_target: Optional[List[str]] = split_arg(self.additional_target)
         self.galore_target: List[str] = split_arg(self.galore_target)
         self.freeze_vision_tower = self.freeze_vision_tower or self.train_mm_proj_only
-        self.use_ref_model = (self.stage == "dpo" and self.pref_loss not in ["orpo", "simpo"])
+        self.use_ref_model = self.stage == "dpo" and self.pref_loss not in ["orpo", "simpo"]
 
         assert self.finetuning_type in ["lora", "freeze", "full"], "Invalid fine-tuning method."
         assert self.ref_model_quantization_bit in [None, 8, 4], "We only accept 4-bit or 8-bit quantization."
@@ -379,10 +379,10 @@ class FinetuningArguments(FreezeArguments, LoraArguments, RLHFArguments, GaloreA
         if self.loraplus_lr_ratio is not None and self.finetuning_type != "lora":
             raise ValueError("`loraplus_lr_ratio` is only valid for LoRA training.")
 
-        if self.pissa_convert and self.finetuning_type != "lora":
-            raise ValueError("`pissa_convert` is only valid for LoRA training.")
+        if self.pissa_init and self.finetuning_type != "lora":
+            raise ValueError("`pissa_init` is only valid for LoRA training.")
 
-        if self.pissa_convert and (self.stage in ["rm", "ppo", "kto"] or self.use_ref_model):
+        if self.pissa_init and (self.stage in ["ppo", "kto"] or self.use_ref_model):
             raise ValueError("Cannot use PiSSA for current training stage.")
 
         if self.train_mm_proj_only and self.finetuning_type != "full":

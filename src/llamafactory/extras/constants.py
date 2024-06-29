@@ -403,6 +403,18 @@ register_model_group(
             DownloadSource.DEFAULT: "deepseek-ai/DeepSeek-V2-Chat",
             DownloadSource.MODELSCOPE: "deepseek-ai/DeepSeek-V2-Chat",
         },
+        "DeepSeek-MoE-Coder-16B-Base": {
+            DownloadSource.DEFAULT: "deepseek-ai/DeepSeek-Coder-V2-Lite-Base",
+        },
+        "DeepSeek-MoE-Coder-236B-Base": {
+            DownloadSource.DEFAULT: "deepseek-ai/DeepSeek-Coder-V2-Base",
+        },
+        "DeepSeek-MoE-Coder-16B-Chat": {
+            DownloadSource.DEFAULT: "deepseek-ai/DeepSeek-Coder-V2-Lite-Instruct",
+        },
+        "DeepSeek-MoE-Coder-236B-Chat": {
+            DownloadSource.DEFAULT: "deepseek-ai/DeepSeek-Coder-V2-Instruct",
+        },
     },
     template="deepseek",
 )
@@ -495,6 +507,18 @@ register_model_group(
         "Gemma-1.1-7B-Chat": {
             DownloadSource.DEFAULT: "google/gemma-1.1-7b-it",
         },
+        "Gemma-2-9B": {
+            DownloadSource.DEFAULT: "google/gemma-2-9b",
+        },
+        "Gemma-2-27B": {
+            DownloadSource.DEFAULT: "google/gemma-2-27b",
+        },
+        "Gemma-2-9B-Chat": {
+            DownloadSource.DEFAULT: "google/gemma-2-9b-it",
+        },
+        "Gemma-2-27B-Chat": {
+            DownloadSource.DEFAULT: "google/gemma-2-27b-it",
+        },
     },
     template="gemma",
 )
@@ -567,7 +591,7 @@ register_model_group(
 
 register_model_group(
     models={
-        "Jambda-v0.1": {
+        "Jamba-v0.1": {
             DownloadSource.DEFAULT: "ai21labs/Jamba-v0.1",
             DownloadSource.MODELSCOPE: "AI-ModelScope/Jamba-v0.1",
         }
