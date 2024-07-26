@@ -4,7 +4,7 @@
 [![GitHub Code License](https://img.shields.io/github/license/hiyouga/LLaMA-Factory)](LICENSE)
 [![GitHub last commit](https://img.shields.io/github/last-commit/hiyouga/LLaMA-Factory)](https://github.com/hiyouga/LLaMA-Factory/commits/main)
 [![PyPI](https://img.shields.io/pypi/v/llamafactory)](https://pypi.org/project/llamafactory/)
-[![Citation](https://img.shields.io/badge/citation-63-green)](#projects-using-llama-factory)
+[![Citation](https://img.shields.io/badge/citation-72-green)](#projects-using-llama-factory)
 [![GitHub pull request](https://img.shields.io/badge/PRs-welcome-blue)](https://github.com/hiyouga/LLaMA-Factory/pulls)
 [![Discord](https://dcbadge.vercel.app/api/server/rKfvV9r9FK?compact=true&style=flat)](https://discord.gg/rKfvV9r9FK)
 [![Twitter](https://img.shields.io/twitter/follow/llamafactory_ai)](https://twitter.com/llamafactory_ai)
@@ -21,7 +21,7 @@
 
 **Fine-tuning a large language model can be easy as...**
 
-https://github.com/hiyouga/LLaMA-Factory/assets/16256802/9840a653-7e9c-41c8-ae89-7ace5698baf6
+https://github.com/user-attachments/assets/7c96b465-9df7-45f4-8053-bf03e58386d3
 
 Choose your path:
 
@@ -161,10 +161,10 @@ Compared to ChatGLM's [P-Tuning](https://github.com/THUDM/ChatGLM2-6B/tree/main/
 | [Falcon](https://huggingface.co/tiiuae)                      | 7B/11B/40B/180B                  | falcon    |
 | [Gemma/Gemma 2/CodeGemma](https://huggingface.co/google)     | 2B/7B/9B/27B                     | gemma     |
 | [GLM-4](https://huggingface.co/THUDM)                        | 9B                               | glm4      |
-| [InternLM2](https://huggingface.co/internlm)                 | 7B/20B                           | intern2   |
+| [InternLM2/InternLM2.5](https://huggingface.co/internlm)     | 7B/20B                           | intern2   |
 | [Llama](https://github.com/facebookresearch/llama)           | 7B/13B/33B/65B                   | -         |
 | [Llama 2](https://huggingface.co/meta-llama)                 | 7B/13B/70B                       | llama2    |
-| [Llama 3](https://huggingface.co/meta-llama)                 | 8B/70B                           | llama3    |
+| [Llama 3/Llama 3.1](https://huggingface.co/meta-llama)       | 8B/70B                           | llama3    |
 | [LLaVA-1.5](https://huggingface.co/llava-hf)                 | 7B/13B                           | vicuna    |
 | [Mistral/Mixtral](https://huggingface.co/mistralai)          | 7B/8x7B/8x22B                    | mistral   |
 | [OLMo](https://huggingface.co/allenai)                       | 1B/7B                            | -         |
@@ -199,6 +199,9 @@ You also can add a custom chat template to [template.py](src/llamafactory/data/t
 | KTO Training           | :white_check_mark: | :white_check_mark: | :white_check_mark: | :white_check_mark: |
 | ORPO Training          | :white_check_mark: | :white_check_mark: | :white_check_mark: | :white_check_mark: |
 | SimPO Training         | :white_check_mark: | :white_check_mark: | :white_check_mark: | :white_check_mark: |
+
+> [!TIP]
+> The implementation details of PPO can be found in [this blog](https://newfacade.github.io/notes-on-reinforcement-learning/17-ppo-trl.html).
 
 ## Provided Datasets
 
@@ -384,6 +387,8 @@ Remember to use `ASCEND_RT_VISIBLE_DEVICES` instead of `CUDA_VISIBLE_DEVICES` to
 
 If you cannot infer model on NPU devices, try setting `do_sample: false` in the configurations.
 
+Download the pre-built Docker images: [32GB](http://mirrors.cn-central-221.ovaijisuan.com/detail/130.html) | [64GB](http://mirrors.cn-central-221.ovaijisuan.com/detail/131.html)
+
 </details>
 
 ### Data Preparation
@@ -420,16 +425,24 @@ For CUDA users:
 
 ```bash
 cd docker/docker-cuda/
-docker-compose up -d
-docker-compose exec llamafactory bash
+docker compose up -d
+docker compose exec llamafactory bash
 ```
 
 For Ascend NPU users:
 
 ```bash
 cd docker/docker-npu/
-docker-compose up -d
-docker-compose exec llamafactory bash
+docker compose up -d
+docker compose exec llamafactory bash
+```
+
+For AMD ROCm users:
+
+```bash
+cd docker/docker-rocm/
+docker compose up -d
+docker compose exec llamafactory bash
 ```
 
 <details><summary>Build without Docker Compose</summary>
@@ -484,6 +497,34 @@ docker run -dit \
     --device /dev/davinci_manager \
     --device /dev/devmm_svm \
     --device /dev/hisi_hdc \
+    --shm-size 16G \
+    --name llamafactory \
+    llamafactory:latest
+
+docker exec -it llamafactory bash
+```
+
+For AMD ROCm users:
+
+```bash
+docker build -f ./docker/docker-rocm/Dockerfile \
+    --build-arg INSTALL_BNB=false \
+    --build-arg INSTALL_VLLM=false \
+    --build-arg INSTALL_DEEPSPEED=false \
+    --build-arg INSTALL_FLASHATTN=false \
+    --build-arg PIP_INDEX=https://pypi.org/simple \
+    -t llamafactory:latest .
+
+docker run -dit \
+    -v ./hf_cache:/root/.cache/huggingface \
+    -v ./ms_cache:/root/.cache/modelscope \
+    -v ./data:/app/data \
+    -v ./output:/app/output \
+    -v ./saves:/app/saves \
+    -p 7860:7860 \
+    -p 8000:8000 \
+    --device /dev/kfd \
+    --device /dev/dri \
     --shm-size 16G \
     --name llamafactory \
     llamafactory:latest
@@ -591,6 +632,14 @@ If you have a project that should be incorporated, please contact via email or c
 1. Chen et al. Advancing Tool-Augmented Large Language Models: Integrating Insights from Errors in Inference Trees. 2024. [[arxiv]](https://arxiv.org/abs/2406.07115)
 1. Zhu et al. Are Large Language Models Good Statisticians?. 2024. [[arxiv]](https://arxiv.org/abs/2406.07815)
 1. Li et al. Know the Unknown: An Uncertainty-Sensitive Method for LLM Instruction Tuning. 2024. [[arxiv]](https://arxiv.org/abs/2406.10099)
+1. Ding et al. IntentionQA: A Benchmark for Evaluating Purchase Intention Comprehension Abilities of Language Models in E-commerce. 2024. [[arxiv]](https://arxiv.org/abs/2406.10173)
+1. He et al. COMMUNITY-CROSS-INSTRUCT: Unsupervised Instruction Generation for Aligning Large Language Models to Online Communities. 2024. [[arxiv]](https://arxiv.org/abs/2406.12074)
+1. Lin et al. FVEL: Interactive Formal Verification Environment with Large Language Models via Theorem Proving. 2024. [[arxiv]](https://arxiv.org/abs/2406.14408)
+1. Treutlein et al. Connecting the Dots: LLMs can Infer and Verbalize Latent Structure from Disparate Training Data. 2024. [[arxiv]](https://arxiv.org/abs/2406.14546)
+1. Feng et al. SS-Bench: A Benchmark for Social Story Generation and Evaluation. 2024. [[arxiv]](https://arxiv.org/abs/2406.15695)
+1. Feng et al. Self-Constructed Context Decompilation with Fined-grained Alignment Enhancement. 2024. [[arxiv]](https://arxiv.org/abs/2406.17233)
+1. Liu et al. Large Language Models for Cuffless Blood Pressure Measurement From Wearable Biosignals. 2024. [[arxiv]](https://arxiv.org/abs/2406.18069)
+1. Iyer et al. Exploring Very Low-Resource Translation with LLMs: The University of Edinburgh’s Submission to AmericasNLP 2024 Translation Task. AmericasNLP 2024. [[paper]](https://aclanthology.org/2024.americasnlp-1.25)
 1. **[StarWhisper](https://github.com/Yu-Yang-Li/StarWhisper)**: A large language model for Astronomy, based on ChatGLM2-6B and Qwen-14B.
 1. **[DISC-LawLLM](https://github.com/FudanDISC/DISC-LawLLM)**: A large language model specialized in Chinese legal domain, based on Baichuan-13B, is capable of retrieving and reasoning on legal knowledge.
 1. **[Sunsimiao](https://github.com/X-D-Lab/Sunsimiao)**: A large language model specialized in Chinese medical domain, based on Baichuan-7B and ChatGLM-6B.
@@ -600,6 +649,7 @@ If you have a project that should be incorporated, please contact via email or c
 1. **[Chinese-LLaVA-Med](https://github.com/BUAADreamer/Chinese-LLaVA-Med)**: A multimodal large language model specialized in Chinese medical domain, based on LLaVA-1.5-7B.
 1. **[AutoRE](https://github.com/THUDM/AutoRE)**: A document-level relation extraction system based on large language models.
 1. **[NVIDIA RTX AI Toolkit](https://github.com/NVIDIA/RTX-AI-Toolkit)**: SDKs for fine-tuning LLMs on Windows PC for NVIDIA RTX.
+1. **[LazyLLM](https://github.com/LazyAGI/LazyLLM)**: An easy and lazy way for building multi-agent LLMs applications and supports model fine-tuning via LLaMA Factory.
 
 </details>
 
