@@ -33,6 +33,13 @@
       "rejected": "rejected"
     }
   },
+  "magpie_200k": {
+    "hf_hub_url": "Magpie-Align/Magpie-Qwen2-Pro-200K-Chinese",
+    "formatting": "sharegpt",
+    "columns": {
+      "messages": "conversations"
+    }
+  },
   "aris_code_qa_en":{
     "hf_hub_url": "Aris-AI/Aris-code-qa-en-32k"
   },
