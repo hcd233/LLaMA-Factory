@@ -1,0 +1,18 @@
+### model
+model_name_or_path: ../autodl-tmp/internlm2_5-7b
+adapter_name_or_path: Aris-Internlm2.5-7B-Chat-Agent-16K-20240804
+
+### method
+finetuning_type: lora
+
+### dataset
+task: cmmul_test  # choices: [mmlu_test, ceval_validation, cmmlu_test]
+template: fewshot
+lang: zh
+n_shot: 5
+
+### output
+save_dir: Aris-Internlm2.5-7B-Chat-Agent-16K-20240804/eval/cmmlu
+
+### eval
+batch_size: 2
