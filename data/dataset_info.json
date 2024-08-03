@@ -23,14 +23,23 @@
   "aris_alpaca_deepseek": {
     "hf_hub_url": "Aris-AI/Aris-alpaca-deepseek-zh-34k"
   },
-  "aris_alpaca_dpo": {
-    "hf_hub_url": "Aris-AI/Aris-alpaca-dpo-zh-sharegpt-10k",
+  "aris_ow_dpo": {
+    "hf_hub_url": "Aris-AI/Aris-chat-open-webui",
+    "folder": "dpo",
     "ranking": true,
     "formatting": "sharegpt",
     "columns": {
       "messages": "conversations",
       "chosen": "chosen",
       "rejected": "rejected"
+    }
+  },
+  "aris_ow_sft": {
+    "hf_hub_url": "Aris-AI/Aris-chat-open-webui",
+    "folder": "sft",
+    "formatting": "sharegpt",
+    "columns": {
+      "messages": "conversations"
     }
   },
   "magpie_200k": {
